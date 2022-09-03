@@ -1,0 +1,23 @@
+{
+  "name": "disney-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "keywords": [
+    "alkemy",
+    "node",
+    "backend",
+    "Disnesy API"
+  ],
+  "author": "Diego Medina",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "dotenv": "^16.0.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.4"
+  }
+}
