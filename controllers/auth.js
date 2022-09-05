@@ -1,9 +1,11 @@
 const register = (req, res) => {
-  res.send("register route");
+  const registerInfo = req.body;
+  res.json({ "Requested Route": "Register route", registerInfo });
 };
 
 const login = (req, res) => {
-  res.send("login route");
+  const loginInfo = req.body;
+  res.json({ "Requested Route": "Login route", loginInfo });
 };
 
 module.exports = {

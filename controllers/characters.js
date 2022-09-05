@@ -7,11 +7,13 @@ const getCharacter = (req, res) => {
   res.send(`info about ${name}`);
 };
 const createCharacter = (req, res) => {
-  res.send("create Character");
+  const data = req.body;
+  res.json({ "Requested Route": "create Character", data });
 };
 const updateCharacter = (req, res) => {
   const { name } = req.params;
-  res.send(`update ${name}`);
+  const data = req.body;
+  res.json({ "Requested Route": `update ${name}`, data });
 };
 const deleteCharacter = (req, res) => {
   const { name } = req.params;

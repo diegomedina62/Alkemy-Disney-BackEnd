@@ -9,6 +9,8 @@ const authRouter = require("./routes/auth");
 const charactersRouter = require("./routes/characters");
 const moviesRouter = require("./routes/movies");
 
+app.use(express.json());
+
 //initial route
 app.get("/", (req, res) => {
   res.send("Welcome to Disney API for Alkemy, by Diego Medina");

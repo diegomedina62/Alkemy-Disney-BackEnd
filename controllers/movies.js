@@ -7,11 +7,13 @@ const getMovie = (req, res) => {
   res.send(`info about ${title}`);
 };
 const createMovie = (req, res) => {
-  res.send("create movie");
+  data = req.body;
+  res.json({ "requested Route": "Create Movie", data });
 };
 const updateMovie = (req, res) => {
   const { title } = req.params;
-  res.send(`update ${title}`);
+  const data = req.body;
+  res.send({ "Requested Route": `update ${title}`, data });
 };
 const deleteMovie = (req, res) => {
   const { title } = req.params;
