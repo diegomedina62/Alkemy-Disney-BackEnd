@@ -3,6 +3,8 @@ require("dotenv").config();
 //express
 const express = require("express");
 const app = express();
+//from dependencies
+const { Sequelize } = require("sequelize");
 
 //import routers
 const authRouter = require("./routes/auth");
@@ -29,8 +31,25 @@ app.use("/movies", moviesRouter);
 app.use(routeNotFound);
 app.use(errorHandlerMiddleware);
 
-//server
+//server and SQL Connection using MySQL
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}...`);
-});
+const sequelize = new Sequelize(
+  process.env.SQL_DATABASE,
+  process.env.SQL_USERNAME,
+  process.env.SQL_PASSWORD,
+  {
+    dialect: "mysql",
+  }
+);
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection to MySQL has been stablished");
+
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}...`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+})();
