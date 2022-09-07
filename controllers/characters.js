@@ -8,12 +8,6 @@ const getAllCharacters = (req, res) => {
 
 const getCharacter = asyncWrapper((req, res, next) => {
   const { name } = req.params;
-  if (name == "error") {
-    throw createCustomError(
-      "Error Test/prueba de error",
-      StatusCodes.IM_A_TEAPOT
-    );
-  }
   res.send(`info about ${name}`);
 });
 
