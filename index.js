@@ -28,6 +28,7 @@ app.use("/auth", authRouter);
 app.use("/characters", charactersRouter);
 app.use("/movies", moviesRouter);
 
+// error routes
 app.use(routeNotFound);
 app.use(errorHandlerMiddleware);
 
@@ -41,11 +42,16 @@ const sequelize = new Sequelize(
     dialect: "mysql",
   }
 );
+
 (async () => {
   try {
+    //chech SQL connection
     await sequelize.authenticate();
     console.log("Connection to MySQL has been stablished");
+    //Sync Models
+    await require("./models/syncAndAssociation")(sequelize);
 
+    //set server
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });
