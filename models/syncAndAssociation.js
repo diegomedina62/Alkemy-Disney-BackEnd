@@ -15,6 +15,6 @@ module.exports = async (sequelize) => {
   Movie.belongsToMany(Gender, { through: "Movie-Gender" });
   Gender.belongsToMany(Movie, { through: "Movie-Gender" });
 
-  await sequelize.sync({ alter: true });
+  await sequelize.sync();
   console.log("Models have been synched");
 };
