@@ -1,42 +1,42 @@
-const { Sequelize } = require("sequelize");
 const { createCustomError } = require("../errors/custom-error");
 const { StatusCodes } = require("http-status-codes");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 
 //importing models
-const DB = require("../SQLdatabase")();
+
+const Character = require("../models/characters");
+const Movies = require("../models/movies");
+const sequelize = require("../database/db");
 
 //controllers
 const getAllCharacters = (req, res) => {
   res.send("get all Characters");
 };
 
-const getCharacter = asyncWrapper((req, res, next) => {
+const getCharacter = asyncWrapper(async (req, res, next) => {
   const { name } = req.params;
-  res.send(`info about ${name}`);
+
+  res.json({ msg: "Character created" });
 });
 
 const createCharacter = asyncWrapper(async (req, res, next) => {
   const { moviesAndSeries, ...characterData } = req.body;
-  const character = await DB.Character.build(characterData);
-  //case with input with no associated Movies
-  if (!moviesAndSeries) {
-    character.save();
-    return res
-      .status(StatusCodes.OK)
-      .json({ "Character created": characterData });
-  }
 
-  //case with associated Movie
-  const movie = await DB.Movie.findOne({ where: { title: moviesAndSeries } });
-  if (!movie) {
-    await character.save();
-    await character.createMovie({ title: moviesAndSeries });
-  } else {
-    await character.save();
-    await character.addMovie(movie);
-  }
-  res.status(StatusCodes.OK).send("Character created with movie added");
+  const result = await sequelize.transaction(async (t) => {
+    const character = await Character.create(characterData, { transaction: t });
+    let movie = "";
+    let created = "";
+    if (moviesAndSeries) {
+      [movie, created] = await Movies.findOrCreate({
+        where: { title: moviesAndSeries },
+        transaction: t,
+      });
+      await character.addMovie(movie, { transaction: t });
+    }
+    return { character, movie, created };
+  });
+
+  res.status(StatusCodes.OK).json({ msg: "Character Created", result });
 });
 
 const updateCharacter = (req, res) => {
