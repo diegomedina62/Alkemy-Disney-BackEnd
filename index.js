@@ -34,15 +34,16 @@ app.use(errorHandlerMiddleware);
 
 //server and SQL Connection using MySQL
 const port = process.env.PORT || 3000;
-const sqlDB = require("./SQLdatabase")();
+const sequelize = require("./database/db");
 
 (async () => {
   try {
     //chech SQL connection
-    await sqlDB.sequelize.authenticate();
+    await sequelize.authenticate();
     console.log("Connection to MySQL has been stablished");
     //Sync Models
-    await sqlDB.sequelize.sync();
+    require("./database/modelAssociations")();
+    await sequelize.sync();
     console.log("Database has been synched");
     //set server
     app.listen(port, () => {

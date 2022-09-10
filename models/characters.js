@@ -1,28 +1,29 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require("../database/db");
 
-module.exports = (sequelize) => {
-  return sequelize.define(
-    "Character",
-    {
-      name: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
-      image: {
-        type: DataTypes.BLOB,
-      },
-      age: {
-        type: DataTypes.INTEGER.UNSIGNED,
-      },
-      weight: {
-        type: DataTypes.INTEGER.UNSIGNED,
-      },
-      history: {
-        type: DataTypes.TEXT,
-      },
+const Character = sequelize.define(
+  "Character",
+  {
+    name: {
+      type: DataTypes.STRING,
+      primaryKey: true,
     },
-    {
-      timestamps: false,
-    }
-  );
-};
+    image: {
+      type: DataTypes.BLOB,
+    },
+    age: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    weight: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    history: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+module.exports = Character;

@@ -1,17 +1,18 @@
-const { DataTypes } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
+const sequelize = require("../database/db");
 
-module.exports = (sequelize) => {
-  return sequelize.define(
-    "Gender",
-    {
-      gender: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
-      image: {
-        type: DataTypes.BLOB,
-      },
+const Gender = sequelize.define(
+  "Gender",
+  {
+    gender: {
+      type: DataTypes.STRING,
+      primaryKey: true,
     },
-    { timestamps: false }
-  );
-};
+    image: {
+      type: DataTypes.BLOB,
+    },
+  },
+  { timestamps: false }
+);
+
+module.exports = Gender;
