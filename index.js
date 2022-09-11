@@ -14,6 +14,7 @@ const moviesRouter = require("./routes/movies");
 //import middleware
 const routeNotFound = require("./middlewares/notFound");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
+const authMiddleware = require("./middlewares/authentication");
 
 //middlewares
 app.use(express.json());
@@ -25,8 +26,8 @@ app.get("/", (req, res) => {
 
 //routes
 app.use("/auth", authRouter);
-app.use("/characters", charactersRouter);
-app.use("/movies", moviesRouter);
+app.use("/characters", authMiddleware, charactersRouter);
+app.use("/movies", authMiddleware, moviesRouter);
 
 // error routes
 app.use(routeNotFound);
