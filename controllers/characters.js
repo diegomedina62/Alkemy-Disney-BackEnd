@@ -27,19 +27,24 @@ const getAllCharacters = asyncWrapper(async (req, res) => {
 
   if (queryMovie) {
     const movie = await Movies.findByPk(queryMovie);
+    if (!movie) {
+      throw createCustomError("Movie doesn't exist", StatusCodes.BAD_REQUEST);
+    }
     const result = await movie.getCharacters(searchOptions);
     return res.status(StatusCodes.OK).json({
       msg: "List of Characters",
+      result,
       queryArray,
       queryMovie,
-      result,
     });
   }
 
   const result = await Character.findAll(searchOptions);
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: "List of Characters", queryArray, result });
+  res.status(StatusCodes.OK).json({
+    msg: "List of Characters",
+    result,
+    queryArray,
+  });
 });
 
 const getCharacter = asyncWrapper(async (req, res, next) => {
@@ -53,7 +58,7 @@ const getCharacter = asyncWrapper(async (req, res, next) => {
     await character.getMovies({ attributes: ["title"] })
   ).map((x) => x.title);
 
-  res.json({
+  res.status(StatusCodes.OK).json({
     msg: "Character Information",
     result: { character, AssociatedMovies },
   });
@@ -86,7 +91,8 @@ const updateCharacter = asyncWrapper(async (req, res, next) => {
   let character = await Character.findByPk(name);
   if (!character) {
     throw createCustomError(
-      "Character does not exist. Create one using createCharacter"
+      "Character does not exist. Create one using createCharacter",
+      StatusCodes.BAD_REQUEST
     );
   }
   const result = await sequelize.transaction(async (t) => {
@@ -111,7 +117,10 @@ const deleteCharacter = asyncWrapper(async (req, res) => {
   const { name } = req.params;
   let character = await Character.findByPk(name);
   if (!character) {
-    throw createCustomError("Character does not exist.");
+    throw createCustomError(
+      "Character does not exist.",
+      StatusCodes.BAD_REQUEST
+    );
   }
 
   await character.destroy();
