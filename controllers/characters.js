@@ -12,27 +12,51 @@ const sequelize = require("../database/db");
 //controllers
 const getAllCharacters = asyncWrapper(async (req, res) => {
   let queryArray = [];
-  const { name, age, movie } = req.query;
+  const { name, age, queryMovie } = req.query;
   if (name) {
     queryArray.push({ name });
   }
   if (age) {
     queryArray.push({ age });
   }
-  // if (movie) {
-  //   queryObject.movie = movie;
-  // }
-  const result = await Character.findAll({
-    attributes: ["name", "image"],
-    where: { [Op.or]: queryArray },
-  });
-  res.json({ msg: "List of Characters", queryArray, result });
+  let searchOptions = { attributes: ["name", "image"] };
+
+  if (queryArray.length !== 0) {
+    searchOptions.where = { [Op.or]: [...queryArray] };
+  }
+
+  if (queryMovie) {
+    const movie = await Movies.findByPk(queryMovie);
+    const result = await movie.getCharacters(searchOptions);
+    return res.status(StatusCodes.OK).json({
+      msg: "List of Characters",
+      queryArray,
+      queryMovie,
+      result,
+    });
+  }
+
+  const result = await Character.findAll(searchOptions);
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "List of Characters", queryArray, result });
 });
 
 const getCharacter = asyncWrapper(async (req, res, next) => {
   const { name } = req.params;
 
-  res.json({ msg: "Character created" });
+  const character = await Character.findByPk(name);
+  if (!character) {
+    throw createCustomError("Character doesn't exist", StatusCodes.BAD_REQUEST);
+  }
+  const AssociatedMovies = (
+    await character.getMovies({ attributes: ["title"] })
+  ).map((x) => x.title);
+
+  res.json({
+    msg: "Character Information",
+    result: { character, AssociatedMovies },
+  });
 });
 
 const createCharacter = asyncWrapper(async (req, res, next) => {
