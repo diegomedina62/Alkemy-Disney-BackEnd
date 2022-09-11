@@ -2,7 +2,6 @@ const ModelsAssociations = () => {
   const Character = require("../models/characters");
   const Movie = require("../models/movies");
   const Gender = require("../models/gender");
-  const User = require("../models/usersDatabase");
 
   //definition of associations
   //Character to Movies in a M:N association

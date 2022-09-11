@@ -43,7 +43,7 @@ const sequelize = require("./database/db");
     console.log("Connection to MySQL has been stablished");
     //Sync Models
     require("./database/modelAssociations")();
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("Database has been synched");
     //set server
     app.listen(port, () => {
