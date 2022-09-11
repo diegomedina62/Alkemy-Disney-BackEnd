@@ -11,6 +11,10 @@ class User extends Model {
       { expiresIn: process.env.JWT_LIFETIME }
     );
   }
+
+  checkPassword(givenPassword) {
+    return bcrypt.compareSync(givenPassword, this.password);
+  }
 }
 User.init(
   {
