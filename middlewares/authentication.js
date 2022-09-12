@@ -7,9 +7,11 @@ const authenticationMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    throw createCustomError(
-      "Invalid Authentication: please provide token",
-      StatusCodes.UNAUTHORIZED
+    next(
+      createCustomError(
+        "Invalid Authentication: please provide token",
+        StatusCodes.UNAUTHORIZED
+      )
     );
   }
   //get token from header
