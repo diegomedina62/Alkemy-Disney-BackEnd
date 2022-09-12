@@ -15,7 +15,7 @@ const getAllMovies = asyncWrapper(async (req, res, next) => {
     searchOptions.where = { title };
   }
   if (order) {
-    searchOptions.order = [["title", order]];
+    searchOptions.order = [["filmDate", order]];
   }
 
   if (queryGender) {
@@ -23,7 +23,9 @@ const getAllMovies = asyncWrapper(async (req, res, next) => {
     if (!gender) {
       throw createCustomError("Gender doesn't exist", StatusCodes.BAD_REQUEST);
     }
-    const result = await gender.getMovies(searchOptions);
+    const result = (await gender.getMovies(searchOptions)).map((x) => {
+      return { title: x.title, image: x.image, filmDate: x.filmDate };
+    });
     return res.status(StatusCodes.OK).json({
       msg: "List of Movies",
       result,

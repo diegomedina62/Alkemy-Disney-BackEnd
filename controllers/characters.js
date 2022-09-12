@@ -30,7 +30,9 @@ const getAllCharacters = asyncWrapper(async (req, res) => {
     if (!movie) {
       throw createCustomError("Movie doesn't exist", StatusCodes.BAD_REQUEST);
     }
-    const result = await movie.getCharacters(searchOptions);
+    const result = (await movie.getCharacters(searchOptions)).map((x) => {
+      return { name: x.name, image: x.image };
+    });
     return res.status(StatusCodes.OK).json({
       msg: "List of Characters",
       result,
@@ -67,6 +69,12 @@ const getCharacter = asyncWrapper(async (req, res, next) => {
 const createCharacter = asyncWrapper(async (req, res, next) => {
   const { moviesAndSeries, ...characterData } = req.body;
 
+  if (!characterData.name) {
+    throw createCustomError(
+      "Must provide Character name",
+      StatusCodes.BAD_REQUEST
+    );
+  }
   const result = await sequelize.transaction(async (t) => {
     const character = await Character.create(characterData, { transaction: t });
     let movie = "";

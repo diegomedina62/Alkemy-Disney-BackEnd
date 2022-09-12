@@ -6,9 +6,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     responseMsg: err.message || "Internal Error: something went wrong",
   };
 
-  return res
-    .status(responseError.responseCode)
-    .json({ message: responseError.responseMsg, rawError: err });
+  if (err.name == "SequelizeUniqueConstraintError") {
+    responseError.responseCode = StatusCodes.BAD_REQUEST;
+    responseError.responseMsg = err.errors.map((x) => x.message);
+  }
+  return res.status(responseError.responseCode).json({
+    error: { message: responseError.responseMsg },
+  });
 };
 
 module.exports = errorHandlerMiddleware;

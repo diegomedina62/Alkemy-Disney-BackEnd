@@ -8,7 +8,7 @@ const Gender = require("../models/gender");
 const sequelize = require("../database/db");
 
 const createGender = asyncWrapper(async (req, res, next) => {
-  result = sequelize.transaction(async (t) => {
+  result = await sequelize.transaction(async (t) => {
     const gender = await Gender.create(req.body, { transaction: t });
     return gender;
   });

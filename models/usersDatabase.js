@@ -35,9 +35,15 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: {
+        msg: "email already used in an existing account",
+      },
       allowNull: false,
-      validate: { isEmail: true },
+      validate: {
+        isEmail: {
+          msg: "your email does not have a valid email format",
+        },
+      },
     },
   },
   {
