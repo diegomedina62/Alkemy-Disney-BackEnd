@@ -12,7 +12,7 @@ const register = asyncWrapper(async (req, res, next) => {
     throw createCustomError("Missing fields", StatusCodes.BAD_REQUEST);
   }
   const result = await sequelize.transaction(async (t) => {
-    const user = await User.create(req.body);
+    const user = await User.create(req.body, { transaction: t });
     const token = user.createJWT();
     return { token };
   });

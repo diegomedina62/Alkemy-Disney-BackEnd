@@ -10,6 +10,7 @@ const { Sequelize } = require("sequelize");
 const authRouter = require("./routes/auth");
 const charactersRouter = require("./routes/characters");
 const moviesRouter = require("./routes/movies");
+const gendersRouter = require("./routes/gender");
 
 //import middleware
 const routeNotFound = require("./middlewares/notFound");
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/characters", authMiddleware, charactersRouter);
 app.use("/movies", authMiddleware, moviesRouter);
+app.use("/genders", authMiddleware, gendersRouter);
 
 // error routes
 app.use(routeNotFound);
