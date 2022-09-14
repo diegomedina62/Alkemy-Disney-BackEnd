@@ -17,9 +17,16 @@ const register = asyncWrapper(async (req, res, next) => {
     return { token };
   });
 
-  res
-    .status(StatusCodes.CREATED)
-    .json({ msg: "New user registered. Welcome!", result });
+  const wasWelcomeEmailSent = await require("../controllers/emailSender")(
+    email,
+    username
+  );
+
+  res.status(StatusCodes.CREATED).json({
+    msg: "New user registered. Welcome!",
+    result,
+    wasWelcomeEmailSent,
+  });
 });
 
 const login = asyncWrapper(async (req, res, next) => {
