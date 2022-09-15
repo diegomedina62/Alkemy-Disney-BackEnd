@@ -66,6 +66,13 @@ const getMovie = asyncWrapper(async (req, res, next) => {
 const createMovie = asyncWrapper(async (req, res, next) => {
   const { associatedGender, associatedCharacter, ...movieData } = req.body;
 
+  if (!movieData.title) {
+    throw createCustomError(
+      "Must provide Movie title",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
   const result = await sequelize.transaction(async (t) => {
     const movie = await Movies.create(movieData, { transaction: t });
     let character = "";

@@ -46,10 +46,24 @@ const login = asyncWrapper(async (req, res, next) => {
   }
 
   const token = user.createJWT();
-  res.json({ msg: "Succesful Login", result: { token } });
+  res
+    .status(StatusCodes.OK)
+    .json({ msg: "Succesful Login", result: { token } });
+});
+
+const deleteUser = asyncWrapper(async (req, res, next) => {
+  const { email } = req.params;
+  let user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw createCustomError("User doesn't exist", StatusCodes.BAD_REQUEST);
+  }
+
+  await user.destroy();
+  res.status(StatusCodes.OK).json({ msg: `User deleted:${email}` });
 });
 
 module.exports = {
   register,
   login,
+  deleteUser,
 };

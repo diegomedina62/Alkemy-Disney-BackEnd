@@ -10,6 +10,15 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     responseError.responseCode = StatusCodes.BAD_REQUEST;
     responseError.responseMsg = err.errors.map((x) => x.message);
   }
+  if (err.name == "SequelizeValidationError") {
+    responseError.responseCode = StatusCodes.BAD_REQUEST;
+    responseError.responseMsg = err.errors.map((x) => x.message);
+  }
+  if (err.name == "SequelizeDatabaseError") {
+    responseError.responseCode = StatusCodes.BAD_REQUEST;
+    responseError.responseMsg = err.message;
+  }
+
   return res.status(responseError.responseCode).json({
     error: { message: responseError.responseMsg },
   });
