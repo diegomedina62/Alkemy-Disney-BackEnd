@@ -251,7 +251,7 @@ suite("Movies Routes", function () {
   after((done) => {
     chai
       .request(server)
-      .delete(`/genders/${TestMovie}`)
+      .delete(`/genders/${TestGender}`)
       .set({ Authorization: `Bearer ${token}` })
       .end((err, res) => {
         done();
